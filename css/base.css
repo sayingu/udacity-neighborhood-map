@@ -1,0 +1,12 @@
+#list {
+	max-height: 600px;
+	overflow-x: auto;
+}
+
+#map {
+	min-height: 600px;
+}
+
+#alert {
+	display: none;
+}
