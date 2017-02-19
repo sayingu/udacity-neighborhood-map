@@ -1,5 +1,13 @@
-#list {
-	max-height: 600px;
+.alert {
+	margin-top: 20px;
+}
+
+.list-panel {
+	margin-top: 20px;
+}
+
+.list-group {
+	max-height: 500px;
 	overflow-x: auto;
 }
 
@@ -7,6 +15,13 @@
 	min-height: 600px;
 }
 
-#alert {
-	display: none;
+.info-img {
+	min-width: 100px;
+	min-height: 100px;
+	float: left;
+	margin-right: 10px;
+}
+
+.info-content {
+	min-width: 400px;
 }

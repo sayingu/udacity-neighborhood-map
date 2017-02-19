@@ -2,39 +2,59 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title></title>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+		<!-- Bootstrap -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!-- Application base css -->
 		<link rel="stylesheet" type="text/css" href="css/base.css">
-		<script type="text/javascript" src="js/app.js"></script>
 	</head>
 	<body>
 		<div class="container">
 			<div class="row">
+				<div class="col-md-12">
+					<h1>Neighbor Hood Map</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" data-bind="with: alertError">
+					<div id="alert" class="alert alert-danger" role="alert" data-bind="visible: show">
+						<strong data-bind="text: type"></strong> <span data-bind="text: detail"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-4">
 					<div class="input-group">
-						<input type="text" name="address" class="form-control" value="김포공항">
+						<input type="text" name="address" class="form-control">
 						<span class="input-group-btn">
-						<a href="javascript:" id="btn_search" class="btn btn-primary" role="button">검색</a>
+						<a href="javascript:" id="btn_search" class="btn btn-primary" role="button">Filter</a>
 						</span>
 					</div>
-					<div class="panel panel-primary">
-						<div class="panel-heading">검색결과</div>
-						<div id="list" class="list-group"></div>
+					<div class="panel panel-primary list-panel">
+						<div class="panel-heading">Filter results</div>
+						<div class="list-group" data-bind="foreach: list">
+							<a href="#" class="list-group-item" data-bind="click: $parent.selectLocation, html: name"></a>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-8">
-					<div id="map"></div>
+					<div id="map" data-bind="event: {center_changed: initList}"></div>
 				</div>
 			</div>
-
-			<div id="alert" class="alert alert-danger" role="alert"></div>
 		</div>
 
+		<!-- the compressed, production jQuery 3.1.1 -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<!-- Knockout 3.4.1 -->
+		<script src="js/knockout-3.4.1.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+    	<script src="js/bootstrap.min.js"></script>
+    	<!-- Google map api -->
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYopMFBlGYDPMOL4Va5OGx5Mvuw7PsJkk&callback=initMap" async defer></script>
+
+		<!-- Application base javascript -->
+		<script type="text/javascript" src="js/app.js"></script>
 	</body>
 </html>
