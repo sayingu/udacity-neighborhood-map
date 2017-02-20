@@ -27,14 +27,14 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div class="input-group">
-						<input type="text" name="keyword" class="form-control">
+						<input type="text" id="keyword" class="form-control">
 						<span class="input-group-btn">
-						<a href="#" class="btn btn-primary" role="button" data-bind="click: filterList">Filter</a>
+						<a href="#" class="btn btn-primary" role="button" data-bind="click: filter">Filter</a>
 						</span>
 					</div>
 					<div class="panel panel-primary list-panel">
 						<div class="panel-heading">Filter results</div>
-						<div class="list-group" data-bind="foreach: list">
+						<div class="list-group" data-bind="foreach: filteredList">
 							<a href="#" class="list-group-item" data-bind="click: $parent.selectLocation, html: name"></a>
 						</div>
 					</div>

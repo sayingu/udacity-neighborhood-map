@@ -25,3 +25,7 @@
 .info-content {
 	min-width: 400px;
 }
+
+.info-tip {
+	float: left;
+}

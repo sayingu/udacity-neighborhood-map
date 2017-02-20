@@ -1,14 +1,27 @@
 var clientSecretStr = "client_id=0NLQ5FK4IS1NAGQAOEIFXHEI0L1AZ0ATISBGPJ2LDBXH3BJY&" +
 	"client_secret=Y4ANNOQHEVKX40HNXT3SG4NK3IGHP4ETLEOKNL1FOFPIC5JR&";
 
-var versionStr = "v=20170220";
+/**
+* @description Version string for foursquare api
+* @returns {string} 8 digital string for today
+*/
+var versionStr = function(){
+	var dt = new Date();
+
+	var month = dt.getMonth()+1;
+	month = (month<10?"0"+month:month);
+	var day = dt.getDate();
+	day = (day<10?"0"+day:day);
+
+	return "v=" + dt.getFullYear() + month + day;
+};
 
 /**
-* @description Represents a book
+* @description Represents the alert message
 * @constructor
-* @param {string} title - The title of the book
-* @param {string} author - The author of the book
-* @returns {number} Sum of a and b
+* @param {boolean} data.show - Flag for alert display show
+* @param {string} data.type - Error type
+* @param {string} data.detail - Detail error message
 */
 var AlertError = function(data){
 	this.show = ko.observable(data.show);
@@ -17,11 +30,10 @@ var AlertError = function(data){
 };
 
 /**
-* @description Represents a book
+* @description Represents the item
 * @constructor
-* @param {string} title - The title of the book
-* @param {string} author - The author of the book
-* @returns {number} Sum of a and b
+* @param {string} data.name - Place name
+* @param {object} data.marker - Object for Google map marker
 */
 var Item = function(data){
 	// this.id = ko.observable(data.id);
@@ -36,29 +48,40 @@ var ViewModel = function() {
 	
 	// Init error msg model
 	this.alertError = ko.observable({show: false, type: '', detail: ''});
+	// Set error msg model to hide
+	this.hideError = function(){
+		self.alertError({show: false, type: '', detail: ''});
+	};
+	// Set error msg model to show
+	this.showError = function(data){
+		self.alertError({
+			show: true,
+			type: data.responseJSON.meta.errorType,
+			detail: data.responseJSON.meta.errorDetail
+		});
+	};
 
-	// Init left side lists model
-	this.list = ko.observableArray([]);
 	
+	this.list = ko.observableArray([]);
+	// Init left side lists model
 	this.initList = function(pos){
 		$.ajax({
 			dataType: "json",
 			url: "https://api.foursquare.com/v2/venues/search?" +
-				clientSecretStr + versionStr,
+				clientSecretStr + versionStr(),
 			data: "ll=" + pos.lat + "," + pos.lng,
-			beforeSend: function(){
-				self.alertError({show: false, type: '', detail: ''});
-			},
+			beforeSend: self.hideError,
 			success: function(data){
 				if (data && data.meta.code == 200) {
 					var venues = data.response.venues;
 					venues.forEach(function(venu){
-						//
+						// Make Google map marker
 						venu.marker = new google.maps.Marker({
 							position: {lat: venu.location.lat, lng: venu.location.lng},
 							map: map
 						});
 
+						// Add click event to Google map marker
 						venu.marker.addListener('click', function() {
 							self.selectLocation(venu);
 						});
@@ -69,21 +92,48 @@ var ViewModel = function() {
 				}
 			},
 			error: function(data){
-				self.alertError({
-					show: true,
-					type: data.responseJSON.meta.errorType,
-					detail: data.responseJSON.meta.errorDetail
-				});
+				self.showError(data);
 			}
 		});
 	};
 
 	// Filter to search result lists
-	this.filterList = function(){
-		// TODO http://stackoverflow.com/questions/20857594/knockout-filtering-on-observable-array
-		
+	this.keyword = ko.observable($("#keyword").val());
+
+	// Change observable variable only at click event
+	this.filter = function(){
+		self.keyword($("#keyword").val());
 	};
 
+
+	this.filteredList = ko.computed(function(){
+		var keyword = self.keyword();
+
+		// Filter Google map markers
+		if (!keyword) {
+			self.list().forEach(function(item){
+				item.marker.setMap(map);
+			});
+		} else {
+			self.list().forEach(function(item){
+				if (item.name.indexOf(keyword) > -1) {
+					item.marker.setMap(map);
+				} else {
+					item.marker.setMap(null);
+				}
+			});
+		}
+		
+		// Return filtered list
+		if (!keyword) {
+			return self.list();
+		} else {
+			return ko.utils.arrayFilter(self.list(), function(item){
+				return item.name.indexOf(keyword) > -1;
+			});
+		}
+	});
+	
 	// Select left side lists item or marker in map.
 	// Show additional data in maps infoWindow
 	this.selectLocation = function(venu){
@@ -97,12 +147,12 @@ var ViewModel = function() {
 		venu.marker.setIcon('https://mt.google.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-blue.png');
 		venu.marker.setAnimation(google.maps.Animation.DROP);
 		
-		// TODO
-		// Get foursquare photos and tips if that has count over 0
+		// Set detail information to Google map infoWindow
 		self.setDetail(venu);
 	};
 
 	this.setDetail = function(venu){
+		// Get foursquare contents
 		var address = venu.location.formattedAddress[0] + 
 			(venu.location.formattedAddress[1]?", " + venu.location.formattedAddress[1]:"");
 		var contentString = '<div class="info-content">' +
@@ -112,21 +162,21 @@ var ViewModel = function() {
 		infowindow.setContent(contentString);
 		infowindow.open(map, venu.marker);
 
+		// Get foursquare photos
+		var photoString = "";
 		$.ajax({
 			dataType: "json",
 			url: "https://api.foursquare.com/v2/venues/" + venu.id + "/photos?" +
-				clientSecretStr + versionStr,
-			beforeSend: function(){
-				self.alertError({show: false, type: '', detail: ''});
-			},
+				clientSecretStr + versionStr(),
+			beforeSend: self.hideError,
 			success: function(data){
 				if (data && data.meta.code == 200) {
 					var photos = data.response.photos;
 					if (photos.count > 0) {
 						var items = photos.items;
 
-						// Display detail information to infoWindow
-						var photoString = '<div class="info-img">' +
+						// Add photo to infoWindow
+						photoString = '<div class="info-img">' +
 							'<img src="' + items[0].prefix + '100x100' + items[0].suffix + '">' +
 							'</div>';
 
@@ -135,48 +185,38 @@ var ViewModel = function() {
 				}
 			},
 			error: function(data){
-				self.alertError({
-					show: true,
-					type: data.responseJSON.meta.errorType,
-					detail: data.responseJSON.meta.errorDetail
-				});
+				self.showError(data);
 			}
 		});
 
+		// Get foursquare tips
+		var tipString = "";
 		$.ajax({
 			dataType: "json",
 			url: "https://api.foursquare.com/v2/venues/" + venu.id + "/tips?" +
-				clientSecretStr + versionStr,
-			beforeSend: function(){
-				self.alertError({show: false, type: '', detail: ''});
-			},
+				clientSecretStr + versionStr(),
+			beforeSend: self.hideError,
 			success: function(data){
+				console.dir(data);
 				if (data && data.meta.code == 200) {
-					console.dir(data);
-
 					// TODO: Add tips to detail
+					var tips = data.response.tips;
+					if (tips.count > 0) {
+						var items = tips.items;
 
-					/*
-					var photos = data.response.photos;
-					if (photos.count > 0) {
-						var items = photos.items;
-
-						// Display detail information to infoWindow
-						var photoString = '<div class="info-img">' +
-							'<img src="' + items[0].prefix + '100x100' + items[0].suffix + '">' +
+						// Add tip to infoWindow
+						tipString = '<div class="info-tip">' +
+							'<img src="' + items[0].user.photo.prefix + '20x20' + items[0].user.photo.suffix + '">' +
+							'<h5>' + items[0].user.firstName + (items[0].user.lastName?' ' + items[0].user.lastName:'') + '</h5>' +
+							'<p>' + items[0].text + '</p>' +
 							'</div>';
 
-						infowindow.setContent(photoString + contentString);
+						infowindow.setContent(photoString + contentString + tipString);
 					}
-					*/
 				}
 			},
 			error: function(data){
-				self.alertError({
-					show: true,
-					type: data.responseJSON.meta.errorType,
-					detail: data.responseJSON.meta.errorDetail
-				});
+				self.showError(data);
 			}
 		});
 	}
