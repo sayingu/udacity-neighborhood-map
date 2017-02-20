@@ -206,7 +206,7 @@ var ViewModel = function() {
 
 						// Add tip to infoWindow
 						tipString = '<div class="info-tip">' +
-							'<img src="' + items[0].user.photo.prefix + '20x20' + items[0].user.photo.suffix + '">' +
+							'<img src="' + items[0].user.photo.prefix + '50x50' + items[0].user.photo.suffix + '">' +
 							'<h5>' + items[0].user.firstName + (items[0].user.lastName?' ' + items[0].user.lastName:'') + '</h5>' +
 							'<p>' + items[0].text + '</p>' +
 							'</div>';

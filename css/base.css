@@ -27,5 +27,12 @@
 }
 
 .info-tip {
+	clear: both;
+	padding-top: 5px;
+	border-top: solid 1px lightgray;
+}
+
+.info-tip img {
 	float: left;
+	margin-right: 10px;
 }
