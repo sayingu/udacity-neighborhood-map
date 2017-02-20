@@ -80,7 +80,8 @@ var ViewModel = function() {
 
 	// Filter to search result lists
 	this.filterList = function(){
-		// TODO
+		// TODO http://stackoverflow.com/questions/20857594/knockout-filtering-on-observable-array
+		
 	};
 
 	// Select left side lists item or marker in map.
