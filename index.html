@@ -35,8 +35,10 @@
 					<aside>
 						<input type="text" class="form-control" placeholder="Enter text for filter results" data-bind="textInput: filterText">
 						<div class="panel panel-primary list-panel">
-							<div class="panel-heading">Filter results</div>
-							<div class="list-group" data-bind="foreach: filteredList">
+							<div class="panel-heading">
+								<span id="listShowSpan" class="glyphicon" aria-hidden="true" data-bind="css: {'glyphicon-menu-up': listShow, 'glyphicon-menu-down': !listShow()}, click: toggleList"></span> Filter results
+							</div>
+							<div class="list-group" data-bind="foreach: filteredList, visible: listShow">
 								<a href="#" class="list-group-item" data-bind="click: $parent.selectLocation, html: name"></a>
 							</div>
 						</div>

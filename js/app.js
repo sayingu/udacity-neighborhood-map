@@ -68,6 +68,12 @@ var ViewModel = function() {
 		self.showError(jqxhr);
 	});
 
+	// For list show/hide button
+	this.listShow = ko.observable(true);
+	this.toggleList = function(){
+		self.listShow(!self.listShow());
+	};
+
 	this.list = ko.observableArray([]);
 	// Init left side lists model
 	this.initList = function(pos){
@@ -161,8 +167,10 @@ var ViewModel = function() {
 		infowindow.setContent(contentString);
 		infowindow.open(map, venu.marker);
 
-		// Get foursquare photos
 		var photoString = '';
+		var tipString = '';
+
+		// Get foursquare photos
 		$.ajax({
 			url: 'https://api.foursquare.com/v2/venues/' + venu.id + '/photos?' +
 				clientSecretStr + versionStr(),
@@ -177,14 +185,13 @@ var ViewModel = function() {
 							'<img src="' + (items[0].prefix || '') + '100x100' + (items[0].suffix || '') + '">' +
 							'</div>';
 
-						infowindow.setContent(photoString + contentString);
+						infowindow.setContent(photoString + contentString + tipString);
 					}
 				}
 			}
 		});
 
 		// Get foursquare tips
-		var tipString = '';
 		$.ajax({
 			url: 'https://api.foursquare.com/v2/venues/' + venu.id + '/tips?' +
 				clientSecretStr + versionStr(),
@@ -233,7 +240,6 @@ var initMap = function(){
 	/*
 	* If set default location lists by users current locations,
 	* Uncomment this.
-	*
 	*
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {

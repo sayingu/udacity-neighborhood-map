@@ -6,6 +6,17 @@
 	margin-top: 20px;
 }
 
+@media (max-width: 989px) {
+	#listShowSpan {
+		display: inline;
+	}
+}
+@media (min-width: 990px) {
+	#listShowSpan {
+		display: none;
+	}
+}
+
 .list-group {
 	max-height: 500px;
 	overflow-x: auto;
