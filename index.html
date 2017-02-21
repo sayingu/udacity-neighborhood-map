@@ -8,39 +8,49 @@
 		<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<!-- Application base css -->
-		<link rel="stylesheet" type="text/css" href="css/base.css">
+		<link rel="stylesheet" href="css/base.css">
 	</head>
 	<body>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<h1>Neighborhood Map (London)</h1>
+					<header>
+						<h1>Neighborhood Map (London)</h1>
+					</header>
 				</div>
 			</div>
+
 			<div class="row">
-				<div class="col-md-12" data-bind="with: alertError">
-					<div id="alert" class="alert alert-danger" role="alert" data-bind="visible: show">
-						<strong data-bind="text: type"></strong> <span data-bind="text: detail"></span>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="input-group">
-						<input type="text" id="keyword" class="form-control">
-						<span class="input-group-btn">
-						<a href="#" class="btn btn-primary" role="button" data-bind="click: filter">Filter</a>
-						</span>
-					</div>
-					<div class="panel panel-primary list-panel">
-						<div class="panel-heading">Filter results</div>
-						<div class="list-group" data-bind="foreach: filteredList">
-							<a href="#" class="list-group-item" data-bind="click: $parent.selectLocation, html: name"></a>
+				<section>
+					<div class="col-md-12" data-bind="with: alertError">
+						<div id="alert" class="alert alert-danger" role="alert" data-bind="visible: show">
+							<strong data-bind="text: type"></strong> <span data-bind="text: detail"></span>
 						</div>
 					</div>
+				</section>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-4">
+					<aside>
+						<div class="input-group">
+							<input type="text" id="keyword" class="form-control">
+							<span class="input-group-btn">
+							<a href="#" class="btn btn-primary" role="button" data-bind="click: filter">Filter</a>
+							</span>
+						</div>
+						<div class="panel panel-primary list-panel">
+							<div class="panel-heading">Filter results</div>
+							<div class="list-group" data-bind="foreach: filteredList">
+								<a href="#" class="list-group-item" data-bind="click: $parent.selectLocation, html: name"></a>
+							</div>
+						</div>
+					</aside>
 				</div>
 				<div class="col-md-8">
-					<div id="map" data-bind="event: {center_changed: initList}"></div>
+					<main>
+						<div id="map" data-bind="event: {center_changed: initList}"></div>
+					</main>
 				</div>
 			</div>
 		</div>
@@ -51,10 +61,11 @@
 		<script src="js/knockout-3.4.1.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
     	<script src="js/bootstrap.min.js"></script>
-    	<!-- Google map api -->
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYopMFBlGYDPMOL4Va5OGx5Mvuw7PsJkk&callback=initMap" async defer></script>
-
+    	
 		<!-- Application base javascript -->
 		<script type="text/javascript" src="js/app.js"></script>
+
+		<!-- Google map api -->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYopMFBlGYDPMOL4Va5OGx5Mvuw7PsJkk&callback=initMap" async defer></script>
 	</body>
 </html>

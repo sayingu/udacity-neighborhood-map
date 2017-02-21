@@ -219,7 +219,7 @@ var ViewModel = function() {
 				self.showError(data);
 			}
 		});
-	}
+	};
 };
 
 var viewModel = new ViewModel();
