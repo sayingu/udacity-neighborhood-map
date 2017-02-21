@@ -33,12 +33,7 @@
 			<div class="row">
 				<div class="col-md-4">
 					<aside>
-						<div class="input-group">
-							<input type="text" id="keyword" class="form-control">
-							<span class="input-group-btn">
-							<a href="#" class="btn btn-primary" role="button" data-bind="click: filter">Filter</a>
-							</span>
-						</div>
+						<input type="text" class="form-control" placeholder="Enter text for filter results" data-bind="textInput: filterText">
 						<div class="panel panel-primary list-panel">
 							<div class="panel-heading">Filter results</div>
 							<div class="list-group" data-bind="foreach: filteredList">
@@ -66,6 +61,6 @@
 		<script type="text/javascript" src="js/app.js"></script>
 
 		<!-- Google map api -->
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYopMFBlGYDPMOL4Va5OGx5Mvuw7PsJkk&callback=initMap" async defer></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYopMFBlGYDPMOL4Va5OGx5Mvuw7PsJkk&callback=initMap" async defer onerror="googleMapError()")></script>
 	</body>
 </html>
