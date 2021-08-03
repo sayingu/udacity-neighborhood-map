@@ -1,9 +1,13 @@
 # Neighborhood Map (London)
 Left side list and Google map marker are popular places near by London.
+
 Click list or marker will show detail info with photo.
+
+[Github page](https://sayingu.github.io/udacity-neighborhood-map/)
 
 ## Introductios on how to run the project
 Deploy this folder from any web server.
+
 If you installed `python 3`, Run `webserver.bat` for simple python web server.
 
 ## Third party api used
